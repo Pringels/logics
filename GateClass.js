@@ -3,8 +3,18 @@ var GateClass = function(inputs, pos) {
 
     var counter = 10;
 
-    this.x = pos.x;
-    this.y = pos.y;
+    this.width = 50;
+    this.height = 50;
+
+    if (typeof pos != 'undefined') {
+        this.x = pos.x;
+        this.y = pos.y;
+        if (typeof pos.s != 'undefined') {
+            this.s = pos.s;
+        } else {
+            this.s = 1;
+        }
+    }
 
     for (key in inputs) {
         if (typeof(inputs[key]) == "object") {
@@ -55,17 +65,34 @@ GateClass.prototype.drawNodes = function() {
 };
 
 GateClass.prototype.draw = function() {
-    ctx.strokeStyle = "#AAA";
+    ctx.beginPath();
+    ctx.strokeStyle = "#222";
     if (this.out) {
         ctx.fillStyle = this.color;
     } else {
-        ctx.fillStyle = "#AAA";
+        ctx.fillStyle = "#CCC";
     }
 
-    ctx.fillRect(this.x, this.y, 50, 50);
+
+
+    // Draw shape goes here
+    //ctx.rect(this.x, this.y, this.width * this.s, this.height * this.s);
+
+    this.drawShape();
+
+    ctx.fill();
+    ctx.stroke();
+    ctx.closePath();
+
+    if (typeof this.parts != undefined) {
+        for (key in this.parts) {
+            this.parts[key].draw();
+        }
+    }
+
     this.drawNodes();
 }
 
 GateClass.prototype.drawShape = function() {
-
+    ctx.rect(this.x, this.y, this.width * this.s, this.height * this.s);
 }

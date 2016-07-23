@@ -22,39 +22,67 @@ document.addEventListener('mousemove', function(e){
     mouseY = e.clientY;
 });
 
+var and = new And(
+    {
+        a: false,
+        b: true
+    },
+    {
+        x: 400,
+        y: 400,
+        s: 1
+    }
+
+)
 
 var switcher = new Switch(
     {
         x: 100,
-        y: 100
+        y: 100,
+        s: 1
     }
 );
 
 var switcher2 = new Switch(
     {
         x: 300,
-        y: 100
+        y: 100,
+        s: 1
     }
 );
 
-var gateA = new AndGate(
+var switcher3 = new Switch(
+    {
+        x: 300,
+        y: 300,
+        s: 1
+    }
+);
+
+
+var mux = new Mux(
     {
         a: switcher,
         b: switcher2
     },
     {
-        x: 300,
-        y: 300
+        sel: switcher3
+    },
+    {
+        x: 500,
+        y: 500,
+        s: 1
     }
 );
 
 var light = new Light(
     {
-        in: gateA
+        in: mux
     },
     {
         x: 300,
-        y: 600
+        y: 600,
+        s: 1
     }
 );
 
@@ -65,11 +93,15 @@ function draw() {
 
     ctx.clearRect(0,0,1200,1200);
 
-    gateA.update();
-    gateA.draw();
-
     switcher.draw();
     switcher2.draw();
+    switcher3.draw();
+
+    mux.update();
+    mux.draw();
+
+    and.update();
+    and.draw();
 
     light.draw();
     light.update();

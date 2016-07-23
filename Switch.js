@@ -1,6 +1,7 @@
 var Switch = function(pos) {
     this.x = pos.x;
     this.y = pos.y;
+    this.radius = 10;
     this.addListeners();
     this.out = 0;
     this.color = "#F55";
@@ -9,27 +10,25 @@ var Switch = function(pos) {
 
 Switch.prototype.addListeners = function() {
     var _this = this;
-    document.addEventListener('click', function (e) {
-        if (e.clientX >= _this.x && e.clientX <= _this.x + 50 && e.clientY >= _this.y && e.clientY <= _this.y + 50) {
-            _this.toggle();
-        }
-    });
 
     document.addEventListener('mousemove', function (e) {
         if (_this.translate) {
-            _this.x = e.clientX - 25;
-            _this.y = e.clientY - 25;
+            _this.x = e.clientX - 10;
+            _this.y = e.clientY - 10;
         }
     });
 
     document.addEventListener('mousedown', function (e) {
-        if (e.clientX >= _this.x && e.clientX <= _this.x + 50 && e.clientY >= _this.y && e.clientY <= _this.y + 50) {
+        if (e.clientX >= _this.x && e.clientX <= _this.x + (_this.radius * 2) && e.clientY >= _this.y && e.clientY <= _this.y + (_this.radius * 2)) {
             _this.translate = true;
         }
     });
 
     document.addEventListener('mouseup', function (e) {
         _this.translate = false;
+        if (e.clientX >= _this.x && e.clientX <= _this.x + (_this.radius * 2) && e.clientY >= _this.y && e.clientY <= _this.y + (_this.radius * 2)) {
+            _this.toggle();
+        }
     });
 }
 
