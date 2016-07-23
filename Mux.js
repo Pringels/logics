@@ -34,13 +34,8 @@ Mux = function (inputs, sel, pos) {
         }
     );
 
-    var counter = 0;
-
     for (var key in this.parts){
-        this.parts[key].x = this.x + 10;
-        this.parts[key].y = this.y + (counter * this.s * 0.5) + 10;
-        this.parts[key].s = this.s * this.partScale;
-        counter += 50;
+        this.parts[key].assignParent(this);
     }
 
     this.width = 10 + (50 * this.partScale) * this.s + 10;
@@ -49,12 +44,10 @@ Mux = function (inputs, sel, pos) {
     this.update();
 };
 
-Mux.prototype.update = function() {
-    for (key in this.parts){
-        this.parts[key].update();
-    }
-
+Mux.prototype.updatePart = function() {
     this.out = this.parts.or.out;
 }
+
+
 
 Object.setPrototypeOf(Mux.prototype, GateClass.prototype);

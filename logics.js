@@ -22,18 +22,6 @@ document.addEventListener('mousemove', function(e){
     mouseY = e.clientY;
 });
 
-var and = new And(
-    {
-        a: false,
-        b: true
-    },
-    {
-        x: 400,
-        y: 400,
-        s: 1
-    }
-
-)
 
 var switcher = new Switch(
     {
@@ -86,7 +74,6 @@ var light = new Light(
     }
 );
 
-
 // Main draw function
 
 function draw() {
@@ -99,9 +86,6 @@ function draw() {
 
     mux.update();
     mux.draw();
-
-    and.update();
-    and.draw();
 
     light.draw();
     light.update();

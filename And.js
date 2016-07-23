@@ -4,25 +4,19 @@ var And = function(inputs, pos){
     this.update();
 };
 
-And.prototype.update = function() {
+And.prototype.updatePart = function() {
     this.out = this.a.out && this.b.out;
 };
 
 And.prototype.drawShape = function() {
     ctx.moveTo(this.x, this.y);
-    ctx.arcTo(
+    ctx.arc(
         this.x + (this.width / 2) * this.s,
-        this.y,
-        this.x + this.width * this.s,
         this.y + (this.height / 2) * this.s,
-        (this.width / 2) * this.s
-    );
-    ctx.arcTo(
-        this.x + this.width * this.s,
-        this.y + this.height * this.s,
-        this.x + (this.width / 2) * this.s,
-        this.y + this.height * this.s,
-        (this.width / 2) * this.s
+        (this.width / 2) * this.s,
+        Math.PI * 1.5,
+        Math.PI * 2.5,
+        0
     );
     ctx.lineTo(this.x, this.y + this.height * this.s);
     ctx.lineTo(this.x, this.y);

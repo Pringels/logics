@@ -4,7 +4,7 @@ var Light = function(inputs, pos){
     this.update();
 };
 
-Light.prototype.update = function() {
+Light.prototype.updatePart = function() {
     this.out = this.in.out;
 }
 

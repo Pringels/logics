@@ -2,6 +2,8 @@ var Switch = function(pos) {
     this.x = pos.x;
     this.y = pos.y;
     this.radius = 10;
+    this.width = 10;
+    this.height = 10;
     this.addListeners();
     this.out = 0;
     this.color = "#F55";
