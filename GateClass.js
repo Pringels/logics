@@ -174,13 +174,15 @@ GateClass.prototype.drawShape = function() {
 
 GateClass.prototype.moveHandler = function(e) {
     if (this.translate) {
-        this.x = e.clientX - 10;
-        this.y = e.clientY - 10;
+        this.x = (e.clientX - 10) * (1 / scaleFactor);
+        this.y = (e.clientY - 10) * (1 / scaleFactor);
     }
 }
 
 GateClass.prototype.downHandler = function(e) {
-    if (e.clientX >= this.x && e.clientX <= this.x + this.width && e.clientY >= this.y && e.clientY <= this.y + this.height) {
+    var x = e.clientX;
+    var y = e.clientY;
+    if (x >= this.x * scaleFactor && x <= (this.x + this.width) * scaleFactor && y >= this.y * scaleFactor && y <= (this.y + this.height) * scaleFactor) {
         this.translate = true;
     }
 }
@@ -188,5 +190,3 @@ GateClass.prototype.downHandler = function(e) {
 GateClass.prototype.upHandler = function(e) {
     this.translate = false;
 }
-
-

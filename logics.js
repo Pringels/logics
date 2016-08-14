@@ -5,21 +5,38 @@
 window.requestAnimFrame = (function(callback) {
     return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
     function(callback) {
-    	window.setTimeout(callback, 1000 / 60);
+        window.setTimeout(callback, 1000 / 60);
     };
 })();
 
 var canvas = document.getElementById("canvas");
 if (canvas.getContext){
-	var ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
 }
 
 var mouseX = 0;
 var mouseY = 0;
 
 document.addEventListener('mousemove', function(e){
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+    mouseX = e.clientX * scaleFactor;
+    mouseY = e.clientY * scaleFactor;
+});
+
+var scaleFactor = 1;
+
+var zoom_in = document.getElementById("zoom_in");
+var zoom_out = document.getElementById("zoom_out");
+
+var scale_factor = document.getElementById("scale_factor");
+
+zoom_in.addEventListener('click', function(e){
+    scaleFactor += 0.1;
+    scale_factor.innerHTML = Math.round(scaleFactor * 100) + "%";
+});
+
+zoom_out.addEventListener('click', function(e){
+    scaleFactor -= 0.1;
+    scale_factor.innerHTML = Math.round(scaleFactor * 100) + "%";
 });
 
 
@@ -79,6 +96,7 @@ var light = new Light(
 function draw() {
 
     ctx.clearRect(0,0,1200,1200);
+    ctx.scale(scaleFactor, scaleFactor);
 
     switcher.draw();
     switcher2.draw();
@@ -90,7 +108,9 @@ function draw() {
     light.draw();
     light.update();
 
- 	requestAnimFrame(function() {
+    ctx.scale(1/scaleFactor, 1/scaleFactor);
+
+     requestAnimFrame(function() {
        draw(canvas, ctx);
     });
 }
