@@ -23,6 +23,7 @@ document.addEventListener('mousemove', function(e){
 });
 
 var scaleFactor = 1;
+var updateScaleFactor = false;
 
 var zoom_in = document.getElementById("zoom_in");
 var zoom_out = document.getElementById("zoom_out");
@@ -32,13 +33,17 @@ var scale_factor = document.getElementById("scale_factor");
 zoom_in.addEventListener('click', function(e){
     scaleFactor += 0.1;
     scale_factor.innerHTML = Math.round(scaleFactor * 100) + "%";
+    updateScaleFactor = true;
 });
 
 zoom_out.addEventListener('click', function(e){
     scaleFactor -= 0.1;
     scale_factor.innerHTML = Math.round(scaleFactor * 100) + "%";
+    updateScaleFactor = true;
 });
 
+var gates = [];
+var updatedGates = [];
 
 var switcher = new Switch(
     {
@@ -48,6 +53,8 @@ var switcher = new Switch(
     }
 );
 
+gates.push(switcher);
+
 var switcher2 = new Switch(
     {
         x: 300,
@@ -55,6 +62,8 @@ var switcher2 = new Switch(
         s: 1
     }
 );
+
+gates.push(switcher2);
 
 var switcher3 = new Switch(
     {
@@ -64,6 +73,7 @@ var switcher3 = new Switch(
     }
 );
 
+gates.push(switcher3);
 
 var mux = new Mux(
     {
@@ -80,6 +90,8 @@ var mux = new Mux(
     }
 );
 
+gates.push(mux);
+
 var light = new Light(
     {
         in: mux
@@ -91,30 +103,57 @@ var light = new Light(
     }
 );
 
+gates.push(light);
+
 // Main draw function
 
-function draw() {
+function draw(first) {
 
-    ctx.clearRect(0,0,1200,1200);
-    ctx.scale(scaleFactor, scaleFactor);
+    if (diff("compare") || first){
+        console.log("drawing");
+        ctx.clearRect(0,0,1200,1200);
+        ctx.scale(scaleFactor, scaleFactor);
 
-    switcher.draw();
-    switcher2.draw();
-    switcher3.draw();
+        switcher.draw();
+        switcher2.draw();
+        switcher3.draw();
 
-    mux.update();
-    mux.draw();
+        mux.update();
+        mux.draw();
 
-    light.draw();
-    light.update();
-
-    ctx.scale(1/scaleFactor, 1/scaleFactor);
-
-     requestAnimFrame(function() {
-       draw(canvas, ctx);
+        light.draw();
+        light.update();
+        ctx.scale(1/scaleFactor, 1/scaleFactor);
+    }
+    diff("set");
+    requestAnimFrame(function() {
+       draw(false);
     });
 }
 
+function diff(action) {
+    if (action == "set"){
+        updatedGates = [];
+        for (var i = 0; i < gates.length; i++){
+            updatedGates.push([gates[i].x, gates[i].y]);
+        }
+        return;
+    }
 
+    else if (action == "compare"){
+        for (var i = 0; i < gates.length; i++){
+            if (gates[i].x != updatedGates[i][0] || gates[i].y != updatedGates[i][1]){
+                return true;
+            }
+        }
+        if (updateScaleFactor) {
+            updateScaleFactor = false;
+            return true;
+        }
+    }
 
-draw();
+    return false;
+}
+
+diff("set");
+draw(true);
