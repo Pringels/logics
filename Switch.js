@@ -38,6 +38,10 @@ Switch.prototype.toggle = function () {
     this.out === 0 ? this.out = 1 : this.out = 0;
 }
 
+Switch.prototype.update = function () {
+
+}
+
 Switch.prototype.draw = function () {
     if (this.out) {
         ctx.fillStyle = this.color;

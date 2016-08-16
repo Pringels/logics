@@ -103,26 +103,31 @@ var light = new Light(
     }
 );
 
+
 gates.push(light);
 
 // Main draw function
 
+Droppable.prototype.draw = Or.prototype.draw;
+Droppable.prototype.drawShape = Or.prototype.drawShape;
+
+var droppable = new Droppable(And);
+
+
+gates.push(droppable);
+
 function draw(first) {
 
     if (diff("compare") || first){
-        console.log("drawing");
+        console.log('◕◡◕');
         ctx.clearRect(0,0,1200,1200);
         ctx.scale(scaleFactor, scaleFactor);
 
-        switcher.draw();
-        switcher2.draw();
-        switcher3.draw();
+        for (var i = 0; i < gates.length; i++){
+            gates[i].update();
+            gates[i].draw();
+        }
 
-        mux.update();
-        mux.draw();
-
-        light.draw();
-        light.update();
         ctx.scale(1/scaleFactor, 1/scaleFactor);
     }
     diff("set");
