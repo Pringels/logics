@@ -40,26 +40,28 @@ Droppable.prototype.downHandler = function(e) {
 }
 
 Droppable.prototype.upHandler = function(e) {
-    this.translate = false;
-    var tempClass = new this.className(
-        {
-            a: 0,
-            b: 1
-        },
-        {
-            x: this.x,
-            y: this.y,
-            s: 1
-        }
-    );
+    if(this.translate){
+        this.translate = false;
+        var tempObj = new this.className(
+            {
+                a: 0,
+                b: 1
+            },
+            {
+                x: this.x,
+                y: this.y,
+                s: 1
+            }
+        );
 
+        this.x = 0;
+        this.y = 0;
 
-    gates.push(tempClass);
-    diff("set");
-
-    this.x = 0;
-    this.y = 0;
-    draw(true);
+        gates.push(tempObj);
+        diff("set");
+        addedObject = true;
+        console.log('◕◡◕');
+    }
 }
 
 Droppable.prototype.update = function() {
@@ -67,9 +69,9 @@ Droppable.prototype.update = function() {
 }
 
 Droppable.prototype.draw = function() {
-    ctx.beginPath();
-    ctx.fillStyle = "#55F";
-    ctx.rect(this.x, this.y, this.width, this.height);
-    ctx.fill();
-    ctx.closePath();
+    this.className.call(this);
+}
+
+Droppable.prototype.drawShape = function() {
+    this.className.prototype.drawShape.call(this);
 }

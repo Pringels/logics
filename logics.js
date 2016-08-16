@@ -25,6 +25,8 @@ document.addEventListener('mousemove', function(e){
 var scaleFactor = 1;
 var updateScaleFactor = false;
 
+var addedObject = false;
+
 var zoom_in = document.getElementById("zoom_in");
 var zoom_out = document.getElementById("zoom_out");
 
@@ -108,18 +110,14 @@ gates.push(light);
 
 // Main draw function
 
-Droppable.prototype.draw = Or.prototype.draw;
-Droppable.prototype.drawShape = Or.prototype.drawShape;
 
-var droppable = new Droppable(And);
-
+var droppable = new Droppable(Or);
 
 gates.push(droppable);
 
 function draw(first) {
 
     if (diff("compare") || first){
-        console.log('◕◡◕');
         ctx.clearRect(0,0,1200,1200);
         ctx.scale(scaleFactor, scaleFactor);
 
@@ -139,7 +137,7 @@ function draw(first) {
 function diff(action) {
     if (action == "set"){
         updatedGates = [];
-        for (var i = 0; i < gates.length; i++){
+        for (var i = 0; i < gates.length; i++) {
             updatedGates.push([gates[i].x, gates[i].y]);
         }
         return;
@@ -153,6 +151,11 @@ function diff(action) {
         }
         if (updateScaleFactor) {
             updateScaleFactor = false;
+            return true;
+        }
+
+        if (addedObject) {
+            addedObject = false;
             return true;
         }
     }
