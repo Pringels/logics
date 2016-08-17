@@ -45,7 +45,7 @@ Droppable.prototype.upHandler = function(e) {
         var tempObj = new this.className(
             {
                 a: 0,
-                b: 1
+                b: 0
             },
             {
                 x: this.x,
@@ -60,7 +60,6 @@ Droppable.prototype.upHandler = function(e) {
         gates.push(tempObj);
         diff("set");
         addedObject = true;
-        console.log('◕◡◕');
     }
 }
 
@@ -69,9 +68,5 @@ Droppable.prototype.update = function() {
 }
 
 Droppable.prototype.draw = function() {
-    this.className.call(this);
-}
-
-Droppable.prototype.drawShape = function() {
-    this.className.prototype.drawShape.call(this);
+    ctx.fillRect(this.x, this.y, this.width, this.height);
 }

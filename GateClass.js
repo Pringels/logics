@@ -10,6 +10,10 @@ var GateClass = function(inputs, pos) {
 
     this.parent = false;
 
+    this.attachPoints = {
+
+    }
+
     if (typeof pos != 'undefined') {
         this.x = pos.x;
         this.y = pos.y;
@@ -25,6 +29,7 @@ var GateClass = function(inputs, pos) {
             this[key] = inputs[key];
             this.nodes[key] = {
                 node: inputs[key],
+                attach: false,
                 attachPoint: {
                     x: this.x + counter,
                     y: this.y + -10
@@ -77,9 +82,8 @@ GateClass.prototype.drawNodes = function() {
             ctx.strokeStyle = "#AAA";
         }
 
-        //console.log(this.nodes[key].attachPoint);
         var x = this.nodes[key].attachPoint.x;
-        var y = this.nodes[key].attachPoint.y;
+        var y = this.nodes[key].attachPoint.y + 5;
 
         var distX = this.nodes[key].node.x - x;
 
@@ -88,20 +92,25 @@ GateClass.prototype.drawNodes = function() {
         ctx.moveTo(x, y);
 
         do {
-            y -= 10;
-        } while(linesY.indexOf(y) > -1);
+            x -= 10;
+        } while(linesX.indexOf(x) > -1);
 
         ctx.lineTo(x, y);
-        if (Math.abs(distX) > 50) {
-            ctx.lineTo(x + (distX / 2), y);
-            ctx.lineTo(x + (distX / 2), this.nodes[key].node.y + (this.nodes[key].node.height / 2));
-        } else {
-            ctx.lineTo(x, this.nodes[key].node.y + (this.nodes[key].node.height / 2));
-        }
 
-        ctx.lineTo(this.nodes[key].node.x + this.nodes[key].node.width + 10, this.nodes[key].node.y + (this.nodes[key].node.height / 2));
-        ctx.stroke();
-        ctx.closePath();
+        if (this.nodes[key].attach){
+
+        } else {
+            if (Math.abs(distX) > 50) {
+                ctx.lineTo(x + (distX / 2), y);
+                ctx.lineTo(x + (distX / 2), this.nodes[key].node.y + (this.nodes[key].node.height / 2));
+            } else {
+                ctx.lineTo(x, this.nodes[key].node.y + (this.nodes[key].node.height / 2));
+            }
+
+            ctx.lineTo(this.nodes[key].node.x + this.nodes[key].node.width + 10, this.nodes[key].node.y + (this.nodes[key].node.height / 2));
+            ctx.stroke();
+            ctx.closePath();
+        }
 
         linesX.push(x);
         linesY.push(y);
@@ -109,17 +118,32 @@ GateClass.prototype.drawNodes = function() {
 };
 
 GateClass.prototype.draw = function() {
-    ctx.beginPath();
+
     ctx.strokeStyle = "#222";
     ctx.lineWidth = 2;
+
+    for (key in this.nodes) {
+        if (this.nodes[key].node.out || this.nodes[key].attach){
+            ctx.fillStyle = this.color;
+        } else {
+            ctx.fillStyle = "#CCC";
+        }
+        ctx.beginPath();
+        ctx.rect(this.nodes[key].attachPoint.x, this.nodes[key].attachPoint.y, 10, 10);
+        ctx.moveTo(this.x + this.width/2, this.nodes[key].attachPoint.y + 5);
+        ctx.lineTo(this.nodes[key].attachPoint.x + 10, this.nodes[key].attachPoint.y + 5);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    ctx.beginPath();
+
     if (this.out) {
         ctx.fillStyle = this.color;
     } else {
         ctx.fillStyle = "#CCC";
     }
-
-    // Draw shape goes here
-    //ctx.rect(this.x, this.y, this.width * this.s, this.height * this.s);
 
     this.drawShape();
 
@@ -142,9 +166,9 @@ GateClass.prototype.update = function() {
 
     var counter = 10;
     for (key in this.nodes) {
-        this.nodes[key].attachPoint.x = this.x + counter;
-        this.nodes[key].attachPoint.y = this.y - 10;
-        counter += 10;
+        this.nodes[key].attachPoint.x = this.x - 20;
+        this.nodes[key].attachPoint.y = this.y + counter;
+        counter += 20;
     }
 
     if (typeof this.parts != undefined) {
@@ -182,11 +206,33 @@ GateClass.prototype.moveHandler = function(e) {
 GateClass.prototype.downHandler = function(e) {
     var x = e.clientX;
     var y = e.clientY;
-    if (x >= this.x * scaleFactor && x <= (this.x + this.width) * scaleFactor && y >= this.y * scaleFactor && y <= (this.y + this.height) * scaleFactor) {
+    if (
+        x >= this.x * scaleFactor &&
+        x <= (this.x + this.width) * scaleFactor &&
+        y >= this.y * scaleFactor &&
+        y <= (this.y + this.height) * scaleFactor
+    ) {
         this.translate = true;
+    }
+
+    for (key in this.nodes) {
+        if (
+            x >= (this.nodes[key].attachPoint.x - 10) * scaleFactor &&
+            x <= (this.nodes[key].attachPoint.x + 20) * scaleFactor &&
+            y >= (this.nodes[key].attachPoint.y - 10) * scaleFactor &&
+            y <= (this.nodes[key].attachPoint.y + 20) * scaleFactor
+        ) {
+            this.nodes[key].attach = true;
+        }
     }
 }
 
 GateClass.prototype.upHandler = function(e) {
     this.translate = false;
+
+    for (key in this.nodes) {
+        if (this.nodes[key].attach) {
+            this.nodes[key].attach = false;
+        }
+    }
 }

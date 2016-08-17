@@ -50,7 +50,7 @@ var updatedGates = [];
 var switcher = new Switch(
     {
         x: 100,
-        y: 100,
+        y: 300,
         s: 1
     }
 );
@@ -60,60 +60,31 @@ gates.push(switcher);
 var switcher2 = new Switch(
     {
         x: 300,
-        y: 100,
+        y: 300,
         s: 1
     }
 );
 
 gates.push(switcher2);
 
-var switcher3 = new Switch(
-    {
-        x: 300,
-        y: 300,
-        s: 1
-    }
-);
-
-gates.push(switcher3);
-
-var mux = new Mux(
+var orGate = new Or(
     {
         a: switcher,
         b: switcher2
     },
     {
-        sel: switcher3
-    },
-    {
-        x: 500,
-        y: 500,
-        s: 1
+        x: 200,
+        y: 300
     }
 );
 
-gates.push(mux);
-
-var light = new Light(
-    {
-        in: mux
-    },
-    {
-        x: 300,
-        y: 600,
-        s: 1
-    }
-);
-
-
-gates.push(light);
-
-// Main draw function
-
+gates.push(orGate);
 
 var droppable = new Droppable(Or);
 
 gates.push(droppable);
+
+// Main draw function
 
 function draw(first) {
 
@@ -138,14 +109,14 @@ function diff(action) {
     if (action == "set"){
         updatedGates = [];
         for (var i = 0; i < gates.length; i++) {
-            updatedGates.push([gates[i].x, gates[i].y]);
+            updatedGates.push([gates[i].x, gates[i].y, gates[i].out]);
         }
         return;
     }
 
     else if (action == "compare"){
         for (var i = 0; i < gates.length; i++){
-            if (gates[i].x != updatedGates[i][0] || gates[i].y != updatedGates[i][1]){
+            if (gates[i].x != updatedGates[i][0] || gates[i].y != updatedGates[i][1] || gates[i].out != updatedGates[i][2]){
                 return true;
             }
         }

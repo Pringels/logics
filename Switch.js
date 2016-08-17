@@ -1,7 +1,7 @@
 var Switch = function(pos) {
     this.x = pos.x;
     this.y = pos.y;
-    this.radius = 10;
+    this.radius = 15;
     this.width = 10;
     this.height = 10;
     this.addListeners();
@@ -49,7 +49,7 @@ Switch.prototype.draw = function () {
         ctx.fillStyle = "#AAA";
     }
     ctx.beginPath();
-    ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI, false);
+    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
     ctx.fill();
     ctx.closePath();
 }
